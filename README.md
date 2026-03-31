@@ -1,8 +1,44 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AI Resume Analyzer Plus Job Matcher
+
+AI Resume Analyzer Plus Job Matcher is a web application built with Next.js that allows users to upload their resumes and receive AI-powered analysis and job matching recommendations. The project leverages modern web technologies to provide a seamless and interactive user experience.
+
+## Features
+
+- Upload and analyze resumes using AI
+- Receive personalized job recommendations based on resume content
+- Clean, modern UI with responsive design
+- Built with Next.js App Router and TypeScript
+- Modular component structure for easy maintenance
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js (v18 or higher recommended)
+- npm, yarn, pnpm, or bun
+
+### Installation
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/your-username/ai-resume-analyzer-job-matcher.git
+   cd ai-resume-analyzer-job-matcher/frontend
+   ```
+
+2. Install dependencies:
+
+   ```bash
+   npm install
+   # or
+   yarn install
+   # or
+   pnpm install
+   # or
+   bun install
+   ```
+
+### Running the Development Server
 
 ```bash
 npm run dev
@@ -14,23 +50,34 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser to view the app.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `src/app/` - Main application files (pages, layout, global styles)
+- `src/components/` - Reusable UI components (Button, Navbar, HeroSection, UploadForm)
+- `src/services/` - API service logic
+- `public/` - Static assets
 
-## Learn More
+## Usage
 
-To learn more about Next.js, take a look at the following resources:
+1. Upload your resume using the upload form on the homepage.
+2. The AI will analyze your resume and provide feedback.
+3. View job matches tailored to your profile.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Customization
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Modify UI components in `src/components/` to change the look and feel.
+- Update API logic in `src/services/api.service.ts` to connect to your backend or AI service.
 
-## Deploy on Vercel
+## Deployment
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The app can be easily deployed to Vercel or any platform supporting Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Contributing
+
+Contributions are welcome! Please open issues or submit pull requests for improvements.
+
+## License
+
+[MIT](LICENSE)
