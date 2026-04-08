@@ -17,7 +17,7 @@ export default function Navbar() {
                 </h1>
                 {/* right side button */}
                 <div onClick={scrollToUpload}>
-                <Button />
+                {/* <Button /> */}
                 </div>
             </div>
         </nav>

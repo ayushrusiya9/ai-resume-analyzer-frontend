@@ -8,52 +8,48 @@ import ResultPage from "@/pages/ResultPage";
 export default function UploadForm() {
     const [errors, setErrors] = useState<any>({});
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
-    const [analysisResult, setAnalysisResult] = useState<any>(null); 
-    const [showResults, setShowResults] = useState(false);
+    const [analysisResult, setAnalysisResult] = useState<any>(null);
+    const [isLoading, setIsLoading] = useState(false);
 
-    const validate = (FormData: FormData) => {
-        const newError : any = {};
-        const companyName = FormData.get("company_name")?.toString().trim();
-        const jobTitle = FormData.get("job_title")?.toString().trim();
-        const jobDescription = FormData.get("job_description")?.toString().trim();
-        const resumeFile = FormData.get("resume_file");
+    const validate = (formData: FormData) => {
+        const newError: any = {};
 
-        // form validation
-        if (!companyName) {
-            newError.company_name = "Company name is required";
-        }
-        if (companyName && companyName.toString().length < 3) {
-            newError.company_name = "Company name must be at least 3 characters";
-        }
-        if (!jobTitle) {
-            newError.job_title = "Job title is required";
-        }
-        if (jobTitle && jobTitle.toString().length < 3) {
-            newError.job_title = "Job title must be at least 3 characters";
-        }
-        if (!jobDescription) {
-            newError.job_description = "Job description is required";
-        }
-        if (jobDescription && jobDescription.toString().length < 10) {
-            newError.job_description = "Job description must be at least 10 characters";
-        }
-        if (!resumeFile ) {
-            newError.resume_file = "Resume file is required";
+        const companyName = formData.get("company_name")?.toString().trim();
+        const jobTitle = formData.get("job_title")?.toString().trim();
+        const jobDescription = formData.get("job_description")?.toString().trim();
+        const resumeFile = formData.get("resume_file");
+
+        if (!companyName) newError.company_name = "Company name is required";
+        if (companyName && companyName.length < 3)
+            newError.company_name = "Min 3 characters required";
+
+        if (!jobTitle) newError.job_title = "Job title is required";
+        if (jobTitle && jobTitle.length < 3)
+            newError.job_title = "Min 3 characters required";
+
+        if (!jobDescription) newError.job_description = "Job description is required";
+        if (jobDescription && jobDescription.length < 10)
+            newError.job_description = "Min 10 characters required";
+
+        if (!resumeFile) newError.resume_file = "Resume required";
+
+        if (resumeFile && (resumeFile as File).size > 5 * 1024 * 1024)
+            newError.resume_file = "Max size 5MB";
+
+        if (
+            resumeFile &&
+            !["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"].includes(
+                (resumeFile as File).type
+            )
+        ) {
+            newError.resume_file = "Only PDF or Word allowed";
         }
 
-        // size validation for resume file (max 5MB)
-        if (resumeFile && (resumeFile as File).size > 5 * 1024 * 1024){
-            newError.resume_file = "Resume file must be less than 5MB";
-        }
-
-        if (resumeFile && !["application/pdf", "application/msword"].includes((resumeFile as File).type)){
-            newError.resume_file = "Resume file must be a PDF or Word document";
-        }
         return newError;
-    }
-    
+    };
+
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files && e.target.files[0];
+        const file = e.target.files?.[0];
         setSelectedFile(file || null);
     };
 
@@ -62,58 +58,126 @@ export default function UploadForm() {
 
         const formData = new FormData(e.currentTarget);
         const validationErrors = validate(formData);
+
         setErrors(validationErrors);
 
-        // if there are validation errors, log them and return early
-        if (Object.keys(validationErrors).length > 0) {
-            // console.log("Form validation errors:", validationErrors);
-            return;
-        }
+        if (Object.keys(validationErrors).length > 0) return;
 
-        // if validation passes, proceed to upload the resume
-        uploadResume(formData) // returns a promise
+        setIsLoading(true);
+
+        uploadResume(formData)
             .then((data) => {
-                console.log("Resume analysis result:", data);
-                setAnalysisResult(data); // store the analysis result in state
-                setShowResults(true);
+                setAnalysisResult(data);
             })
             .catch((error) => {
-                setErrors({ submit: "Failed to upload resume: " + error.message });                
+                setErrors({ submit: "Upload failed: " + error.message });
             })
-    }
+            .finally(() => {
+                setIsLoading(false);
+            });
+    };
 
     return (
-        <div className="w-full max-w-screen-md mx-auto mt-10 px-3 sm:px-6 md:px-8 lg:px-0" id="upload-section">
-            {analysisResult === null ? (
-            <form onSubmit={handleSubmit} className="flex flex-col gap-6 sm:gap-8 md:gap-10 mx-auto justify-center">
-                {/* Company Name */}
-                <div className="flex flex-col space-y-1">
-                    <label htmlFor="company_name" className="text-sm text-gray-600">Company Name:</label>
-                    <input type="text" id="company_name" name="company_name" placeholder="Enter Company Name"
-                        className="bg-white p-2 border-none rounded" />
-                    {/* Error message for company name */}
-                    {errors.company_name && <p className="text-red-500 text-sm">{errors.company_name}</p>}
-                </div>
-                {/* Job Title */}
-                <div className="flex flex-col gap-2">
-                    <label htmlFor="job_title" className="text-sm text-gray-600">Job Title:</label>
-                    <input type="text" id="job_title" name="job_title" placeholder="Enter Job Title"
-                        className="bg-white p-2 border-none rounded" />
-                    {/* Error message for job title */}
-                    {errors.job_title && <p className="text-red-500 text-sm">{errors.job_title}</p>}    
-                </div>
+        <div className="w-full max-w-3xl mx-auto mt-10 px-4">
 
-                {/* Job Description */}
-                <div className="flex flex-col gap-2">
-                    <label htmlFor="job_description" className="text-sm text-gray-600">Job Description:</label>
-                    <textarea id="job_description" name="job_description" placeholder="Enter Job Description"
-                        className="bg-white p-2 border-none rounded h-32"></textarea>
-                    {/* Error message for job description */}
-                    {errors.job_description && <p className="text-red-500 text-sm">{errors.job_description}</p>}
+            {isLoading && (
+                <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
+                    <div className="bg-white rounded-xl p-6 flex flex-col items-center shadow-lg">
+                        <svg
+                            className="animate-spin h-10 w-10 text-black mb-4"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                        >
+                            <circle
+                                className="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                strokeWidth="4"
+                            />
+                            <path
+                                className="opacity-75"
+                                fill="currentColor"
+                                d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                            />
+                        </svg>
+                        <p className="font-semibold text-gray-800 mb-2">
+                            Analyzing Resume...
+                        </p>
+                        <div className="flex justify-center w-full max-w-md mb-2">
+                            <Button disabled>
+                                <span className="flex items-center gap-2">
+                                    <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                                    </svg>
+                                    Uploading...
+                                </span>
+                            </Button>
+                        </div>
+                        <p className="text-gray-600">Please wait a few seconds</p>
+                    </div>
                 </div>
+            )}
 
-                {/* Upload Resume */}
-                <div className="flex flex-col gap-2">
+            {/* RESULT PAGE */}
+            {analysisResult ? (
+                <ResultPage
+                    match_score={analysisResult?.match_score}
+                    resume_skills={analysisResult?.resume_skills}
+                    missing_skills={analysisResult?.missing_skills}
+                    suggestions={analysisResult?.suggestions}
+                />
+            ) : (
+
+                /* FORM */
+                <form
+                    onSubmit={handleSubmit}
+                    className={`flex flex-col gap-6 ${isLoading ? "pointer-events-none opacity-50" : ""}`}
+                >
+                    {/* Company */}
+                    <div>
+                        <label className="text-sm text-gray-600">Company Name</label>
+                        <input
+                            name="company_name"
+                            placeholder="eg. Google"
+                            className="bg-white p-2 rounded w-full"
+                        />
+                        {errors.company_name && (
+                            <p className="text-red-500 text-sm">{errors.company_name}</p>
+                        )}
+                    </div>
+
+                    {/* Job Title */}
+                    <div>
+                        <label className="text-sm text-gray-600">Job Title</label>
+                        <input
+                            name="job_title"
+                            placeholder="eg. Software Engineer"
+                            className="bg-white p-2 rounded w-full"
+                        />
+                        {errors.job_title && (
+                            <p className="text-red-500 text-sm">{errors.job_title}</p>
+                        )}
+                    </div>
+
+                    {/* Description */}
+                    <div>
+                        <label className="text-sm text-gray-600">Job Description</label>
+                        <textarea
+                            name="job_description"
+                            placeholder="eg. We are looking for a skilled software engineer..."
+                            className="bg-white p-2 rounded w-full h-32"
+                        />
+                        {errors.job_description && (
+                            <p className="text-red-500 text-sm">{errors.job_description}</p>
+                        )}
+                    </div>
+
+                    {/* Upload */}
+                    <div className="flex flex-col gap-2">
 
                     <label className="text-sm text-gray-600">
                         Upload Resume
@@ -146,23 +210,26 @@ export default function UploadForm() {
 
                         {/* Show selected file name */}
                         {selectedFile && (
-                            <p className="text-green-600 text-sm mt-2">Selected file: {selectedFile.name}</p>
+                        <p className="text-green-600 text-sm mt-2">Selected file: {selectedFile.name}</p>
                         )}
 
                     </label>
 
                 </div>
 
-                {/* Submit Button */}
-                <div className="flex justify-center w-full">
-                    <Button />
-                </div>
-                {/* Error message for submit failure */}
-                {errors.submit && <p className="text-red-500 text-sm text-center mt-2">{errors.submit}</p>}
-            </form>
-            ) : (
-                <ResultPage />
+
+                    {/* BUTTON */}
+                    <Button disabled={isLoading}>
+                        {isLoading ? "Uploading..." : "Upload"}
+                    </Button>
+
+                    {errors.submit && (
+                        <p className="text-red-500 text-sm text-center">
+                            {errors.submit}
+                        </p>
+                    )}
+                </form>
             )}
         </div>
-    )
+    );
 }
