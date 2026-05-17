@@ -78,7 +78,7 @@ export default function UploadForm() {
     };
 
     return (
-        <div className="w-full max-w-3xl mx-auto mt-10 px-4">
+        <div className="w-full max-w-4xl mx-auto mt-8 px-4 sm:px-6 md:px-8">
 
             {isLoading && (
                 <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
@@ -137,30 +137,32 @@ export default function UploadForm() {
                     onSubmit={handleSubmit}
                     className={`flex flex-col gap-6 ${isLoading ? "pointer-events-none opacity-50" : ""}`}
                 >
-                    {/* Company */}
-                    <div>
-                        <label className="text-sm text-gray-600">Company Name</label>
-                        <input
-                            name="company_name"
-                            placeholder="eg. Google"
-                            className="bg-white p-2 rounded w-full"
-                        />
-                        {errors.company_name && (
-                            <p className="text-red-500 text-sm">{errors.company_name}</p>
-                        )}
-                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* Company */}
+                        <div>
+                            <label className="text-sm md:text-sm text-gray-600">Company Name</label>
+                            <input
+                                name="company_name"
+                                placeholder="eg. Google"
+                                className="bg-white p-2 rounded w-full text-sm md:text-base"
+                            />
+                            {errors.company_name && (
+                                <p className="text-red-500 text-sm">{errors.company_name}</p>
+                            )}
+                        </div>
 
-                    {/* Job Title */}
-                    <div>
-                        <label className="text-sm text-gray-600">Job Title</label>
-                        <input
-                            name="job_title"
-                            placeholder="eg. Software Engineer"
-                            className="bg-white p-2 rounded w-full"
-                        />
-                        {errors.job_title && (
-                            <p className="text-red-500 text-sm">{errors.job_title}</p>
-                        )}
+                        {/* Job Title */}
+                        <div>
+                            <label className="text-sm md:text-sm text-gray-600">Job Title</label>
+                            <input
+                                name="job_title"
+                                placeholder="eg. Software Engineer"
+                                className="bg-white p-2 rounded w-full text-sm md:text-base"
+                            />
+                            {errors.job_title && (
+                                <p className="text-red-500 text-sm">{errors.job_title}</p>
+                            )}
+                        </div>
                     </div>
 
                     {/* Description */}
@@ -169,7 +171,7 @@ export default function UploadForm() {
                         <textarea
                             name="job_description"
                             placeholder="eg. We are looking for a skilled software engineer..."
-                            className="bg-white p-2 rounded w-full h-32"
+                            className="bg-white p-2 rounded w-full h-28 md:h-32 text-sm md:text-base"
                         />
                         {errors.job_description && (
                             <p className="text-red-500 text-sm">{errors.job_description}</p>
@@ -185,7 +187,7 @@ export default function UploadForm() {
 
                     <label
                         htmlFor="resume_file"
-                        className="flex flex-col items-center justify-center w-full h-52 px-6 bg-gray-100 rounded-2xl border-2 border-gray-200 cursor-pointer hover:bg-gray-50 hover:border-gray-300transition-all duration-200"
+                        className="flex flex-col items-center justify-center w-full h-40 md:h-52 px-4 md:px-6 bg-gray-100 rounded-2xl border-2 border-gray-200 cursor-pointer hover:bg-gray-50 hover:border-gray-300 transition-all duration-200"
                     >
 
                         <div className="text-3xl mb-3">⬆️</div>
@@ -210,7 +212,7 @@ export default function UploadForm() {
 
                         {/* Show selected file name */}
                         {selectedFile && (
-                        <p className="text-green-600 text-sm mt-2">Selected file: {selectedFile.name}</p>
+                        <p className="text-green-600 text-sm mt-2 truncate w-11/12 text-center">Selected file: {selectedFile.name}</p>
                         )}
 
                     </label>
