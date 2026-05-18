@@ -63,8 +63,8 @@ const ResultPage: React.FC<ResultPageProps> = ({
                 <div className="flex flex-col md:flex-row gap-8">
 
                     {/* SCORE CIRCLE */}
-                    <div className="flex flex-col items-center justify-center relative">
-                        <svg width="140" height="140">
+                    <div className="flex flex-col items-center justify-center relative w-32 md:w-40 lg:w-44">
+                        <svg viewBox="0 0 140 140" className="w-full h-auto">
                             <circle
                                 cx="70"
                                 cy="70"
@@ -96,11 +96,11 @@ const ResultPage: React.FC<ResultPageProps> = ({
                         </svg>
 
                         {/* CENTER TEXT */}
-                        <div className="absolute text-center">
-                            <p className={`text-2xl font-bold ${getScoreColor(match_score)}`}>
+                        <div className="absolute text-center inset-0 flex flex-col items-center justify-center">
+                            <p className={`text-xl md:text-2xl font-bold ${getScoreColor(match_score)}`}>
                                 {match_score}
                             </p>
-                            <p className="text-xs text-gray-500">
+                            <p className="text-xs md:text-sm text-gray-500">
                                 {missing_skills.length} issues
                             </p>
                         </div>
@@ -115,16 +115,16 @@ const ResultPage: React.FC<ResultPageProps> = ({
                             Breakdown of your resume quality.
                         </p>
 
-                        <div className="space-y-3">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             {breakdown.map((item) => (
                                 <div
                                     key={item.label}
-                                    className="flex justify-between items-center border-b pb-2"
+                                    className="flex justify-between items-center border-b pb-2 pr-2"
                                 >
-                                    <span className="font-medium">
+                                    <span className="font-medium text-sm md:text-base">
                                         {item.label}
                                     </span>
-                                    <span className="font-semibold">
+                                    <span className="font-semibold text-sm md:text-base">
                                         {item.value}/100
                                     </span>
                                 </div>
@@ -140,7 +140,7 @@ const ResultPage: React.FC<ResultPageProps> = ({
                         {resume_skills.map((skill) => (
                             <span
                                 key={skill}
-                                className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs"
+                                className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs md:text-sm"
                             >
                                 {skill}
                             </span>
@@ -153,7 +153,7 @@ const ResultPage: React.FC<ResultPageProps> = ({
                             missing_skills.map((skill) => (
                                 <span
                                     key={skill}
-                                    className="bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs"
+                                    className="bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs md:text-sm"
                                 >
                                     {skill}
                                 </span>
