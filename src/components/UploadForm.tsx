@@ -78,7 +78,7 @@ export default function UploadForm() {
     };
 
     return (
-        <div className="w-full max-w-4xl mx-auto mt-8 px-4 sm:px-6 md:px-8">
+        <div id="upload-section" className="w-full max-w-4xl mx-auto mt-8 px-4 sm:px-6 md:px-8">
 
             {isLoading && (
                 <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
